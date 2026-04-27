@@ -1,0 +1,3 @@
+[submodule "eolib-ts"]
+	path = eolib-ts
+	url = git@github.com:alduin-eo/eolib-ts.git
