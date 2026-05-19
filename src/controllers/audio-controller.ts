@@ -108,8 +108,8 @@ export class AudioController {
   private applyMusicVolume(): void {
     if (this.midiSynth) {
       const cfg = this.client.configController;
-      this.midiSynth.setMasterParameter(
-        'masterGain',
+      this.midiSynth.setSystemParameter(
+        'gain',
         cfg.masterVolume * cfg.musicVolume,
       );
     }
