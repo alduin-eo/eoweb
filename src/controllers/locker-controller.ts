@@ -84,10 +84,15 @@ export class LockerController {
   ): void {
     this.client.weight.current = weightCurrent;
 
-    const currentAmount =
-      this.client.inventoryController.getItemAmount(depositedItemId);
-    const depositedAmount = currentAmount - depositedItemAmount;
-    this.client.inventoryController.setItem(depositedItemId, depositedAmount);
+    const depositedAmount = Math.max(
+      0,
+      this.client.inventoryController.getItemAmount(depositedItemId) -
+        depositedItemAmount,
+    );
+    this.client.inventoryController.setItem(
+      depositedItemId,
+      depositedItemAmount,
+    );
 
     this.items = lockerItems;
     for (const cb of this.changedSubscribers) cb(lockerItems);
