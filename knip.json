@@ -2,5 +2,6 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "project": ["**/*.{ts,tsx}"],
   "ignoreDependencies": ["daisyui", "tailwindcss"],
-  "ignoreMembers": ["PreLoginUI", "SpellIcons", "LocaleStrings"]
+  "ignoreMembers": ["PreLoginUI", "SpellIcons", "LocaleStrings"],
+  "ignoreFiles": ["eolib-ts/**"]
 }
