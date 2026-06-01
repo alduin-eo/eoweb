@@ -243,7 +243,7 @@ export class QuestController {
     const packet = new QuestAcceptClientPacket();
     packet.sessionId = this.sessionId;
     packet.questId = questId;
-    packet.npcIndex = record.behaviorId;
+    packet.behaviorId = record.behaviorId;
     packet.dialogId = dialogId;
     packet.replyType = action !== null ? DialogReply.Link : DialogReply.Ok;
     if (action !== null) {
