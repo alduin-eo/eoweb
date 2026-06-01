@@ -11,6 +11,7 @@ import {
 import { useClient } from '@/ui/context';
 import type { DialogId } from '@/ui/in-game';
 import {
+  AlduinDialog,
   BankDialog,
   BarberDialog,
   BardDialog,
@@ -55,6 +56,7 @@ import {
 } from '@/ui/in-game';
 
 const ALL_DIALOG_IDS: DialogId[] = [
+  'alduin',
   'bank',
   'bard',
   'barber',
@@ -82,6 +84,8 @@ const ALL_DIALOG_IDS: DialogId[] = [
 
 function DialogById({ id }: { id: DialogId }) {
   switch (id) {
+    case 'alduin':
+      return <AlduinDialog />;
     case 'bank':
       return <BankDialog />;
     case 'bard':

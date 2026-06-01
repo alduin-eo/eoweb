@@ -35,6 +35,7 @@ import { clearRectangles } from '@/collision';
 import { getDefaultConfig, loadConfig } from '@/config';
 import { HALF_TILE_HEIGHT, INITIAL_IDLE_TICKS, MAX_CHALLENGE } from '@/consts';
 import {
+  AlduinController,
   AlertController,
   AnimationController,
   AudioController,
@@ -180,6 +181,7 @@ export class Client {
   keyboardController: KeyboardController;
   audioController: AudioController;
   authenticationController: AuthenticationController;
+  alduinController: AlduinController;
   bankController: BankController;
   bardController: BardController;
   barberController: BarberController;
@@ -321,6 +323,7 @@ export class Client {
     this.audioController = new AudioController(this);
     setAudioController(this.audioController);
     this.authenticationController = new AuthenticationController(this);
+    this.alduinController = new AlduinController(this);
     this.bankController = new BankController(this);
     this.bardController = new BardController(this);
     this.barberController = new BarberController(this);

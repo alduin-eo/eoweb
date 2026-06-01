@@ -1,6 +1,7 @@
 import type { Client } from '@/client';
 import { registerAccountHandlers } from './account';
 import { registerAdminInteractHandlers } from './admin-interact';
+import { registerAlduinHandlers } from './alduin';
 import { registerArenaHandlers } from './arena';
 import { registerAttackHandlers } from './attack';
 import { registerAvatarHandlers } from './avatar';
@@ -46,6 +47,7 @@ import { registerWarpHandlers } from './warp';
 import { registerWelcomeHandlers } from './welcome';
 
 export function registerAllHandlers(client: Client): void {
+  registerAlduinHandlers(client);
   registerInitHandlers(client);
   registerConnectionHandlers(client);
   registerLoginHandlers(client);

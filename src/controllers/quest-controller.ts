@@ -257,7 +257,7 @@ export class QuestController {
     this.refreshQuestProgress();
   }
 
-  private _refreshDebounce?: number;
+  private _refreshDebounce?: ReturnType<typeof setTimeout>;
   refreshQuestProgress(): void {
     if (this._refreshDebounce !== undefined) {
       clearTimeout(this._refreshDebounce);

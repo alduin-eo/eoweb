@@ -34,7 +34,8 @@ export type DialogId =
   | 'law'
   | 'packet-log'
   | 'ping'
-  | 'trade';
+  | 'trade'
+  | 'alduin';
 
 type DialogMeta = {
   /** Saved layout preference (persisted to localStorage). */

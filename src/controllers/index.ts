@@ -1,3 +1,4 @@
+export { AlduinController } from './alduin-controller';
 export { AlertController } from './alert-controller';
 export { AnimationController } from './animation-controller';
 export { AudioController } from './audio-controller';

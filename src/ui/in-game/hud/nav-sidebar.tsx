@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'preact/hooks';
 import {
   GiBackpack,
+  GiCoins,
   GiCompass,
   GiGears,
   GiScrollUnfurled,
@@ -34,6 +35,7 @@ type NavDialogButton = {
 };
 
 const NAV_BUTTONS: NavDialogButton[] = [
+  { id: 'alduin', Icon: GiCoins },
   { id: 'inventory', Icon: GiBackpack },
   { id: 'map', Icon: GiCompass },
   { id: 'spells', Icon: GiSpellBook },

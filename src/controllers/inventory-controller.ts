@@ -23,7 +23,7 @@ export class InventoryController {
 
   private inventoryChangedSubscribers: (() => void)[] = [];
   private equipmentChangedSubscribers: (() => void)[] = [];
-  private inventoryChangeDebounce: number | null = null;
+  private inventoryChangeDebounce: ReturnType<typeof setTimeout> | null = null;
 
   private inventoryUpdated(): void {
     if (this.inventoryChangeDebounce) {
