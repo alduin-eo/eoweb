@@ -7,6 +7,8 @@ COPY eolib-ts ./eolib-ts
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
 
+RUN cd eolib-ts && pnpm install --frozen-lockfile && pnpm generate && pnpm build
+
 COPY . .
 RUN pnpm build
 

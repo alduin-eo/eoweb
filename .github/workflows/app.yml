@@ -28,6 +28,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
+      - name: Build eolib-ts
+        run: |
+          cd eolib-ts
+          pnpm install --frozen-lockfile
+          pnpm generate
+          pnpm build
       - run: pnpm build
       - run: pnpm exec biome ci .
       - run: pnpm knip

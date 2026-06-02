@@ -3,5 +3,6 @@
   "project": ["**/*.{ts,tsx}"],
   "ignoreDependencies": ["daisyui", "tailwindcss"],
   "ignoreMembers": ["PreLoginUI", "SpellIcons", "LocaleStrings"],
+  "ignoreBinaries": ["generate"],
   "ignoreFiles": ["eolib-ts/**"]
 }
