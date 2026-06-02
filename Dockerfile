@@ -2,12 +2,14 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY eolib-ts ./eolib-ts
-RUN npm install -g pnpm
+RUN corepack enable
 RUN pnpm install --frozen-lockfile
 
-RUN cd eolib-ts && pnpm install --frozen-lockfile && pnpm generate && pnpm build
+WORKDIR /app/eolib-ts
+RUN CI=true pnpm install && pnpm generate && pnpm build
+WORKDIR /app
 
 COPY . .
 RUN pnpm build
