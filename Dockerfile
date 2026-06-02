@@ -3,6 +3,7 @@ FROM node:24-alpine AS builder
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
+COPY eolib-ts ./eolib-ts
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
 
