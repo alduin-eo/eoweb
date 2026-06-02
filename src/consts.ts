@@ -1,4 +1,4 @@
-export const HOST = 'ws://localhost:8079';
+export const HOST = 'wss://ws.alduin-online.com';
 export const TILE_WIDTH = 64;
 export const TILE_HEIGHT = 32;
 export const HALF_TILE_WIDTH = TILE_WIDTH >> 1;

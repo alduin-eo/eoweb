@@ -11,9 +11,9 @@ type Config = {
 export function getDefaultConfig(): Config {
   return {
     host: HOST,
-    staticHost: false,
+    staticHost: true,
     title: 'Alduin Online',
-    creditsUrl: 'https://alduin-online.com',
+    creditsUrl: 'https://alduin-online.com/credits.html',
     soundFont: 'TimGM6mb.sf2',
   };
 }
