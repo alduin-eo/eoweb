@@ -13,6 +13,8 @@ import {
   SequenceStart,
   swapMultiples,
 } from 'eolib';
+import { isAllowedHost } from '@/config';
+
 export class PacketBus {
   private socket?: WebSocket;
   private sequencer?: PacketSequencer;
@@ -39,6 +41,12 @@ export class PacketBus {
 
   async connect(url: string, onClose: () => void): Promise<void> {
     return new Promise<void>((resolve, reject) => {
+      // Last line of defence: test builds only connect to their own origin.
+      if (!isAllowedHost(url)) {
+        reject(new Error(`Connection to ${url} is not allowed in this build`));
+        return;
+      }
+
       try {
         this.socket = new WebSocket(url);
         this.sequencer = new PacketSequencer(SequenceStart.zero());
@@ -109,7 +117,11 @@ export class PacketBus {
 
   private handlePacket(buf: Uint8Array) {
     const data = buf.slice(2);
-    if (data[0] !== 0xff && data[1] !== 0xff) {
+    // Same rule as the server (eolib-rs valid_for_encryption): only packets starting with
+    // 0xff 0xff (Init) or with no payload are sent unencrypted. Testing `byte0 != 0xff && byte1 != 0xff`
+    // skipped decoding whenever *either* encrypted byte was 0xff by chance (~0.4% of packets,
+    // incl. pings, which made the server close the connection with "ping timeout").
+    if (data.length > 2 && !(data[0] === 0xff && data[1] === 0xff)) {
       deinterleave(data);
       flipMsb(data);
       swapMultiples(data, this.decodeMultiple);

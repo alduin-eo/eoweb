@@ -1,3 +1,11 @@
+export {
+  fromHairStyle,
+  hasBeardOption,
+  isBeardAvailable,
+  isBeardForced,
+  maxHairStyleChoice,
+  toHairStyle,
+} from './beard';
 export { bigCoordsToCoords } from './big-coords-to-coords';
 export { getExpForLevel } from './calculate-tnl';
 export { capitalize } from './capitalize';

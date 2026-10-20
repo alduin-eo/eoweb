@@ -12,6 +12,9 @@ RUN CI=true pnpm install && pnpm generate && pnpm build
 WORKDIR /app
 
 COPY . .
+# "production" (default, used by CI) or "test" (test environment builds)
+ARG VITE_DEPLOY_ENV=production
+ENV VITE_DEPLOY_ENV=$VITE_DEPLOY_ENV
 RUN pnpm build
 
 FROM joseluisq/static-web-server:2-alpine AS runtime
