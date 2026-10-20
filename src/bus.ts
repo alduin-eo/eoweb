@@ -117,10 +117,11 @@ export class PacketBus {
 
   private handlePacket(buf: Uint8Array) {
     const data = buf.slice(2);
-    // Every server packet after the init reply is encrypted. Checking for 0xff on the still
-    // encrypted bytes misdetected ~0.4% of packets as plain and dropped them (incl. pings,
-    // which made the server close the connection with "ping timeout").
-    if (this.decodeMultiple !== 0) {
+    // Same rule as the server (eolib-rs valid_for_encryption): only packets starting with
+    // 0xff 0xff (Init) or with no payload are sent unencrypted. Testing `byte0 != 0xff && byte1 != 0xff`
+    // skipped decoding whenever *either* encrypted byte was 0xff by chance (~0.4% of packets,
+    // incl. pings, which made the server close the connection with "ping timeout").
+    if (data.length > 2 && !(data[0] === 0xff && data[1] === 0xff)) {
       deinterleave(data);
       flipMsb(data);
       swapMultiples(data, this.decodeMultiple);
