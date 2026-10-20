@@ -9,7 +9,6 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import {
   CREATE_CHARACTER_PREVIEW_PLAYER_ID,
   MAX_HAIR_COLOR,
-  MAX_HAIR_STYLE,
   MAX_SKIN,
   MIN_HAIR_COLOR,
   MIN_HAIR_STYLE,
@@ -24,6 +23,12 @@ import {
   Input,
 } from '@/ui/components';
 import { useClient, useLocale } from '@/ui/context';
+import {
+  hasBeardOption,
+  isBeardForced,
+  maxHairStyleChoice,
+  toHairStyle,
+} from '@/utils';
 
 const MIN_GENDER = Gender.Female;
 const MAX_GENDER = Gender.Male;
@@ -55,7 +60,9 @@ export function CreateCharacter() {
 
   const [name, setName] = useState('');
   const [gender, setGender] = useState<Gender>(Gender.Female);
-  const [hairStyle, setHairStyle] = useState(MIN_HAIR_STYLE);
+  const [hairChoice, setHairChoice] = useState(MIN_HAIR_STYLE);
+  const [beard, setBeard] = useState(false);
+  const hairStyle = toHairStyle(gender, hairChoice, beard);
   const [hairColor, setHairColor] = useState(MIN_HAIR_COLOR);
   const [skin, setSkin] = useState(MIN_SKIN);
   const [direction, setDirection] = useState<Direction>(Direction.Down);
@@ -154,15 +161,33 @@ export function CreateCharacter() {
               min={MIN_GENDER}
               max={MAX_GENDER}
               format={formatGender}
-              onChange={(v) => setGender(v as Gender)}
+              onChange={(v) => {
+                setGender(v as Gender);
+                setHairChoice((c) => Math.min(c, maxHairStyleChoice(v)));
+              }}
             />
             <CycleInput
               label={locale.createCharacter.hairStyle}
-              value={hairStyle}
+              value={hairChoice}
               min={MIN_HAIR_STYLE}
-              max={MAX_HAIR_STYLE}
-              onChange={setHairStyle}
+              max={maxHairStyleChoice(gender)}
+              onChange={setHairChoice}
             />
+            {hasBeardOption(gender) && (
+              <label class='flex cursor-pointer items-center gap-2 text-sm'>
+                <input
+                  type='checkbox'
+                  name='beard'
+                  class='checkbox checkbox-sm'
+                  checked={beard || isBeardForced(hairChoice)}
+                  disabled={isBeardForced(hairChoice)}
+                  onChange={(e) =>
+                    setBeard((e.target as HTMLInputElement).checked)
+                  }
+                />
+                {locale.createCharacter.beard}
+              </label>
+            )}
             <CycleInput
               label={locale.createCharacter.hairColor}
               value={hairColor}

@@ -3,6 +3,7 @@ import {
   CharacterMapInfo,
   Direction,
   EquipmentMapInfo,
+  Gender,
 } from 'eolib';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { FaCut } from 'react-icons/fa';
@@ -10,7 +11,6 @@ import {
   BARBER_BASE_COST,
   BARBER_COST_PER_LEVEL,
   MAX_HAIR_COLOR,
-  MAX_HAIR_STYLE,
   MIN_HAIR_COLOR,
 } from '@/consts';
 import {
@@ -20,6 +20,14 @@ import {
   drawCharacterPreview,
 } from '@/ui/components';
 import { useClient, useLocale } from '@/ui/context';
+import {
+  fromHairStyle,
+  hasBeardOption,
+  isBeardAvailable,
+  isBeardForced,
+  maxHairStyleChoice,
+  toHairStyle,
+} from '@/utils';
 import { DialogBase } from './dialog-base';
 
 const DIRECTION_COUNT = 4;
@@ -63,9 +71,13 @@ export function BarberDialog() {
 
   const playerChar = client.getCharacterById(client.playerId);
 
-  const [hairStyle, setHairStyle] = useState(
-    () => playerChar?.hairStyle ?? MIN_BARBER_HAIR_STYLE,
+  const gender = playerChar?.gender ?? Gender.Female;
+  const [initialHair] = useState(() =>
+    fromHairStyle(playerChar?.hairStyle ?? MIN_BARBER_HAIR_STYLE),
   );
+  const [hairChoice, setHairChoice] = useState(initialHair.choice);
+  const [beard, setBeard] = useState(initialHair.beard);
+  const hairStyle = toHairStyle(gender, hairChoice, beard);
   const [hairColor, setHairColor] = useState(
     () => playerChar?.hairColor ?? MIN_HAIR_COLOR,
   );
@@ -158,12 +170,33 @@ export function BarberDialog() {
         <div class='flex min-w-0 flex-1 flex-col gap-3'>
           <CycleInput
             label={locale.barber.hairStyle}
-            value={hairStyle}
+            value={hairChoice}
             min={MIN_BARBER_HAIR_STYLE}
-            max={MAX_HAIR_STYLE}
+            max={maxHairStyleChoice(gender)}
             format={formatHairStyle}
-            onChange={setHairStyle}
+            onChange={setHairChoice}
           />
+          {hasBeardOption(gender) && (
+            <label class='flex cursor-pointer items-center gap-2 text-sm'>
+              <input
+                type='checkbox'
+                name='beard'
+                class='checkbox checkbox-sm'
+                checked={
+                  isBeardForced(hairChoice) ||
+                  (beard && isBeardAvailable(gender, hairChoice))
+                }
+                disabled={
+                  isBeardForced(hairChoice) ||
+                  !isBeardAvailable(gender, hairChoice)
+                }
+                onChange={(e) =>
+                  setBeard((e.target as HTMLInputElement).checked)
+                }
+              />
+              {locale.barber.beard}
+            </label>
+          )}
           <CycleInput
             label={locale.barber.hairColor}
             value={hairColor}

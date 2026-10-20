@@ -71,6 +71,7 @@ export const locales = {
       name: 'Name',
       gender: 'Gender',
       hairStyle: 'Hair Style',
+      beard: 'Beard',
       hairColor: 'Hair Color',
       skin: 'Skin',
       female: 'Female',
@@ -450,6 +451,7 @@ export const locales = {
     barber: {
       title: 'Barber',
       hairStyle: 'Hair Style',
+      beard: 'Beard',
       hairColor: 'Hair Color',
       showHat: 'Show Hat',
       cost: 'Cost',
@@ -701,6 +703,7 @@ export const locales = {
       name: 'Naam',
       gender: 'Geslacht',
       hairStyle: 'Haarstijl',
+      beard: 'Baard',
       hairColor: 'Haarkleur',
       skin: 'Huid',
       female: 'Vrouw',
@@ -1083,6 +1086,7 @@ export const locales = {
     barber: {
       title: 'Kapper',
       hairStyle: 'Haarstijl',
+      beard: 'Baard',
       hairColor: 'Haarkleur',
       showHat: 'Hoed tonen',
       cost: 'Kosten',
@@ -1334,6 +1338,7 @@ export const locales = {
       name: 'Namn',
       gender: 'Kön',
       hairStyle: 'Hårstil',
+      beard: 'Skägg',
       hairColor: 'Hårfärg',
       skin: 'Hudton',
       female: 'Kvinna',
@@ -1716,6 +1721,7 @@ export const locales = {
     barber: {
       title: 'Frisör',
       hairStyle: 'Hårstil',
+      beard: 'Skägg',
       hairColor: 'Hårfärg',
       showHat: 'Visa hatt',
       cost: 'Kostnad',
@@ -1967,6 +1973,7 @@ export const locales = {
       name: 'Nome',
       gender: 'Gênero',
       hairStyle: 'Estilo de Cabelo',
+      beard: 'Barba',
       hairColor: 'Cor do Cabelo',
       skin: 'Tom de Pele',
       female: 'Feminino',
@@ -2349,6 +2356,7 @@ export const locales = {
     barber: {
       title: 'Barbeiro',
       hairStyle: 'Estilo de Cabelo',
+      beard: 'Barba',
       hairColor: 'Cor do Cabelo',
       showHat: 'Mostrar Chapéu',
       cost: 'Custo',

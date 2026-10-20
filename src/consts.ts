@@ -69,6 +69,8 @@ export const COLORS = {
 };
 
 export const MAX_HAIR_STYLE = 20;
+// Male hairstyle choices in the UI: 1-20 regular + 21-50 bearded-only (see utils/beard.ts)
+export const MAX_MALE_HAIR_STYLE_CHOICE = 50;
 export const MIN_HAIR_STYLE = 1;
 export const MAX_HAIR_COLOR = 10;
 export const MIN_HAIR_COLOR = 0;
