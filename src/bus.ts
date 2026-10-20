@@ -117,7 +117,10 @@ export class PacketBus {
 
   private handlePacket(buf: Uint8Array) {
     const data = buf.slice(2);
-    if (data[0] !== 0xff && data[1] !== 0xff) {
+    // Every server packet after the init reply is encrypted. Checking for 0xff on the still
+    // encrypted bytes misdetected ~0.4% of packets as plain and dropped them (incl. pings,
+    // which made the server close the connection with "ping timeout").
+    if (this.decodeMultiple !== 0) {
       deinterleave(data);
       flipMsb(data);
       swapMultiples(data, this.decodeMultiple);
