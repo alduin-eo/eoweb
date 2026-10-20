@@ -13,6 +13,8 @@ import {
   SequenceStart,
   swapMultiples,
 } from 'eolib';
+import { isAllowedHost } from '@/config';
+
 export class PacketBus {
   private socket?: WebSocket;
   private sequencer?: PacketSequencer;
@@ -39,6 +41,12 @@ export class PacketBus {
 
   async connect(url: string, onClose: () => void): Promise<void> {
     return new Promise<void>((resolve, reject) => {
+      // Last line of defence: test builds only connect to their own origin.
+      if (!isAllowedHost(url)) {
+        reject(new Error(`Connection to ${url} is not allowed in this build`));
+        return;
+      }
+
       try {
         this.socket = new WebSocket(url);
         this.sequencer = new PacketSequencer(SequenceStart.zero());
