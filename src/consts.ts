@@ -1,4 +1,7 @@
 export const HOST = 'wss://ws.alduin-online.com';
+// Bump whenever a gfx/*.egf file changes: browsers cache /gfx for 30 days (nginx), so a new
+// query string makes them fetch the updated graphics.
+export const GFX_VERSION = '20261020';
 export const TILE_WIDTH = 64;
 export const TILE_HEIGHT = 32;
 export const HALF_TILE_WIDTH = TILE_WIDTH >> 1;

@@ -1,3 +1,4 @@
+import { GFX_VERSION } from '@/consts';
 import { LoadType } from './load-type';
 import type { ResourceInfo } from './pe-reader';
 
@@ -106,7 +107,7 @@ export class GfxLoader {
   }
 
   private async fetchEGF(fileID: number): Promise<ArrayBuffer> {
-    const url = `/gfx/gfx${String(fileID).padStart(3, '0')}.egf`;
+    const url = `/gfx/gfx${String(fileID).padStart(3, '0')}.egf?v=${GFX_VERSION}`;
 
     const response = await fetch(url);
     if (!response.ok) {
