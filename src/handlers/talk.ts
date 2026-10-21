@@ -27,7 +27,7 @@ function handleTalkPlayer(client: Client, reader: EoReader) {
   const character = client.nearby.characters.find(
     (c) => c.playerId === packet.playerId,
   );
-  if (!character) {
+  if (!character || client.socialController.isIgnored(character.name)) {
     return;
   }
 
@@ -57,6 +57,9 @@ function handleTalkServer(client: Client, reader: EoReader) {
 
 function handleTalkMsg(client: Client, reader: EoReader) {
   const packet = TalkMsgServerPacket.deserialize(reader);
+  if (client.socialController.isIgnored(packet.playerName)) {
+    return;
+  }
   client.chatController.notifyChat({
     icon: ChatIcon.GlobalAnnounce,
     name: capitalize(packet.playerName),

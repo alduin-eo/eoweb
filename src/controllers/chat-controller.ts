@@ -21,6 +21,8 @@ type ChatMessage = {
   message: string;
   icon?: ChatIcon | null;
   name?: string;
+  /** Echo of a message this player sent (not received from the server). */
+  outgoing?: boolean;
 };
 
 type ServerChatMessage = {
@@ -132,6 +134,9 @@ export class ChatController {
       const target = trimmed.substring(1).split(' ')[0];
       if (target.trim().length) {
         const msg = trimmed.substring(target.length + 2);
+        if (!msg.trim()) {
+          return;
+        }
         const pmChannel = `pm:${target.toLowerCase()}` as const;
 
         const packet = new TalkTellClientPacket();
@@ -144,6 +149,7 @@ export class ChatController {
           channel: pmChannel,
           name: `${capitalize(this.client.name)}`,
           message: msg,
+          outgoing: true,
         });
 
         return;

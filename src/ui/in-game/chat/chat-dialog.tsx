@@ -15,6 +15,7 @@ import {
   ChatChannels,
   channelColor,
   channelLabel,
+  isPMChannel,
 } from '@/ui/enums';
 import { useBackdropBlur, useViewport, useWindowManager } from '@/ui/in-game';
 import { isMobile } from '@/utils';
@@ -350,11 +351,22 @@ export function ChatDialog({ position }: ChatDialogProps) {
 
   if (!dialog || !activeTab) return null;
 
-  // Unfocused: chromeless preview
+  // Unfocused: chromeless preview. Whispers always show here, even when
+  // their PM tab is not the active one.
   if (!focused) {
+    const previewMessages = [
+      ...tabMessages,
+      ...[...messages.entries()]
+        .filter(
+          ([ch]) =>
+            isPMChannel(ch as ChatChannel) &&
+            !activeTab.channels.includes(ch as ChatChannel),
+        )
+        .flatMap(([, list]) => list),
+    ].sort((a, b) => a.timestampUtc - b.timestampUtc);
     return (
       <ChatPreview
-        messages={tabMessages}
+        messages={previewMessages}
         now={now}
         onFocus={onFocus}
         position={position}
