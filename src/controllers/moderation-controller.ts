@@ -29,19 +29,19 @@ export const REPORT_CATEGORIES = [
 export const REPORT_MIN_LENGTH = 10;
 export const REPORT_MAX_LENGTH = 1000;
 
-export interface PendingWarning {
+interface PendingWarning {
   id: number;
   category: string;
   reason: string;
   issuedAt: string;
 }
 
-export interface ReportTarget {
+interface ReportTarget {
   playerId: number;
   name: string;
 }
 
-export type ReportStatus =
+type ReportStatus =
   | { state: 'editing' }
   | { state: 'sending' }
   | { state: 'sent'; reference: string; trackingCode: string }
