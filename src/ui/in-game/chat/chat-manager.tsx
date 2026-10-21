@@ -215,13 +215,17 @@ export function ChatManagerProvider({
     });
   }, [characterId]);
 
-  const addMessage = useCallback((msg: ChatMessage) => {
+  const addMessage = useCallback((msg: ChatMessage, outgoing = false) => {
     saveChatMessage(msg);
 
     const { channel } = msg;
     const currentDialog = dialogRef.current;
+    let newPmTabId: string | null = null;
 
-    // PM channel → auto-create a dedicated tab in chat
+    // PM channel → auto-create a dedicated tab in chat, without switching to
+    // it: the active tab decides where the next typed line goes, so taking it
+    // over would whisper the player's next Local line to that person. Opening
+    // a conversation is explicit (openWhisper); whispers show in the preview.
     if (isPMChannel(channel)) {
       const alreadyTracked = currentDialog.tabs.some((t) =>
         t.channels.includes(channel),
@@ -229,20 +233,24 @@ export function ChatManagerProvider({
       if (!alreadyTracked) {
         const name = pmChannelName(channel);
         const newTabId = `pm-${channel.replace('pm:', '')}`;
-        setDialog((prev) => ({
-          ...prev,
-          tabs: [
-            ...prev.tabs,
-            {
-              id: newTabId,
-              name: capitalize(name),
-              channels: [channel],
-            },
-          ],
-          activeTabId: newTabId,
-        }));
-        // New PM tab starts as "unread" immediately since we auto-switch to it,
-        // but setActiveTab will clear it — nothing to do here.
+        const newTab = {
+          id: newTabId,
+          name: capitalize(name),
+          channels: [channel],
+        };
+        if (!outgoing) {
+          newPmTabId = newTabId;
+        }
+        dialogRef.current = {
+          ...currentDialog,
+          tabs: [...currentDialog.tabs, newTab],
+          activeTabId: currentDialog.activeTabId,
+        };
+        setDialog((prev) =>
+          prev.tabs.some((t) => t.id === newTabId)
+            ? prev
+            : { ...prev, tabs: [...prev.tabs, newTab] },
+        );
       }
     }
 
@@ -250,9 +258,15 @@ export function ChatManagerProvider({
     setUnreadTabs((prev) => {
       const next = new Set(prev);
       for (const tab of currentDialog.tabs) {
-        if (tab.channels.includes(channel) && tab.id !== dialog.activeTabId) {
+        if (
+          tab.channels.includes(channel) &&
+          tab.id !== currentDialog.activeTabId
+        ) {
           next.add(tab.id);
         }
+      }
+      if (newPmTabId) {
+        next.add(newPmTabId);
       }
       return next;
     });
@@ -270,14 +284,17 @@ export function ChatManagerProvider({
     const handleChat: Parameters<
       typeof client.chatController.subscribeChat
     >[0] = (data) => {
-      addMessage({
-        characterId,
-        channel: data.channel,
-        name: data.name,
-        message: data.message,
-        icon: data.icon,
-        timestampUtc: Date.now(),
-      });
+      addMessage(
+        {
+          characterId,
+          channel: data.channel,
+          name: data.name,
+          message: data.message,
+          icon: data.icon,
+          timestampUtc: Date.now(),
+        },
+        data.outgoing,
+      );
     };
     const handleServerChat: Parameters<
       typeof client.chatController.subscribeServerChat

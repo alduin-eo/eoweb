@@ -81,8 +81,11 @@ export const ChatInput = forwardRef<HTMLInputElement, Props>(function ChatInput(
     const text = input.trim();
     if (!text) return;
 
-    if (sendChannel) {
-      // Single-channel tab: auto-apply the correct prefix
+    if (sendChannel && !text.startsWith('!')) {
+      // Single-channel tab: auto-apply the correct prefix. An explicit
+      // "!name message" always whispers that player, whatever tab is active
+      // (prefixing it would send "!name ..." as text to the tab's player, or
+      // broadcast the whisper on Global).
       const prefix = getAutoPrefix(sendChannel);
       client.chatController.chat(`${prefix}${text}`);
     } else {

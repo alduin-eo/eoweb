@@ -25,6 +25,8 @@ import { DialogBase } from './dialog-base';
 
 type SocialTabId = 'online' | 'friends' | 'guild' | 'ignore';
 
+const PLAYER_LIST_REFRESH_MS = 10_000;
+
 function TabLabel({
   icon,
   text,
@@ -414,8 +416,14 @@ export function SocialDialog() {
 
     client.socialController.subscribePlayerList(handlePlayerListUpdate);
     client.socialController.requestOnlinePlayers();
+    // Keep friends' online/offline status current while the dialog is open.
+    const refresh = window.setInterval(
+      () => client.socialController.requestOnlinePlayers(),
+      PLAYER_LIST_REFRESH_MS,
+    );
 
     return () => {
+      window.clearInterval(refresh);
       client.socialController.unsubscribePlayerList(handlePlayerListUpdate);
     };
   }, [client]);
@@ -448,8 +456,8 @@ export function SocialDialog() {
 
   function buildActions(name: string, _player?: OnlinePlayer): RowActions {
     const lname = name.toLowerCase();
-    const isFriend = friendList.some((n) => n.toLowerCase() === lname);
-    const isIgnored = ignoreList.some((n) => n.toLowerCase() === lname);
+    const isFriend = friendList.includes(lname);
+    const isIgnored = ignoreList.includes(lname);
 
     return {
       isFriend,

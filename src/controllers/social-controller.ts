@@ -25,6 +25,35 @@ type PlayerListSubscriber = (players: OnlinePlayer[]) => void;
 const FRIENDS_KEY = 'eoweb:social:friends';
 const IGNORE_KEY = 'eoweb:social:ignore';
 
+// Character names are case-insensitive (the server sends them lower-case).
+function normalizeName(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+function loadNameList(key: string): string[] {
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(key) || '[]');
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    const names = parsed
+      .filter((n): n is string => typeof n === 'string')
+      .map(normalizeName)
+      .filter(Boolean);
+    return [...new Set(names)];
+  } catch {
+    return [];
+  }
+}
+
+function saveNameList(key: string, names: string[]) {
+  try {
+    localStorage.setItem(key, JSON.stringify(names));
+  } catch {
+    // storage full or blocked: the list still works for this session
+  }
+}
+
 export class SocialController {
   private client: Client;
   naughtyWords: string[] = [];
@@ -41,8 +70,8 @@ export class SocialController {
   constructor(client: Client) {
     this.client = client;
 
-    this.friendList = JSON.parse(localStorage.getItem(FRIENDS_KEY) || '[]');
-    this.ignoreList = JSON.parse(localStorage.getItem(IGNORE_KEY) || '[]');
+    this.friendList = loadNameList(FRIENDS_KEY);
+    this.ignoreList = loadNameList(IGNORE_KEY);
   }
 
   private paperdollOpenedSubscribers: ((data: PaperdollOpenedData) => void)[] =
@@ -102,7 +131,7 @@ export class SocialController {
   }
 
   requestOnlinePlayers(): void {
-    this.client.bus!.send(new PlayersRequestClientPacket());
+    this.client.bus?.send(new PlayersRequestClientPacket());
   }
 
   subscribePlayerList(callback: PlayerListSubscriber) {
@@ -123,39 +152,43 @@ export class SocialController {
   }
 
   addFriend(playerName: string): void {
-    if (this.friendList.includes(playerName)) {
+    const name = normalizeName(playerName);
+    if (!name || this.friendList.includes(name)) {
       return;
     }
 
-    this.friendList.push(playerName);
-    localStorage.setItem(FRIENDS_KEY, JSON.stringify(this.friendList));
+    this.friendList.push(name);
+    saveNameList(FRIENDS_KEY, this.friendList);
   }
 
   removeFriend(playerName: string): void {
-    this.friendList = this.friendList.filter((name) => name !== playerName);
-    localStorage.setItem(FRIENDS_KEY, JSON.stringify(this.friendList));
+    const name = normalizeName(playerName);
+    this.friendList = this.friendList.filter((n) => n !== name);
+    saveNameList(FRIENDS_KEY, this.friendList);
   }
 
   addIgnore(playerName: string): void {
-    if (this.ignoreList.includes(playerName)) {
+    const name = normalizeName(playerName);
+    if (!name || this.ignoreList.includes(name)) {
       return;
     }
 
-    this.ignoreList.push(playerName);
-    localStorage.setItem(IGNORE_KEY, JSON.stringify(this.ignoreList));
+    this.ignoreList.push(name);
+    saveNameList(IGNORE_KEY, this.ignoreList);
   }
 
   removeIgnore(playerName: string): void {
-    this.ignoreList = this.ignoreList.filter((name) => name !== playerName);
-    localStorage.setItem(IGNORE_KEY, JSON.stringify(this.ignoreList));
+    const name = normalizeName(playerName);
+    this.ignoreList = this.ignoreList.filter((n) => n !== name);
+    saveNameList(IGNORE_KEY, this.ignoreList);
   }
 
   isFriend(playerName: string): boolean {
-    return this.friendList.includes(playerName);
+    return this.friendList.includes(normalizeName(playerName));
   }
 
   isIgnored(playerName: string): boolean {
-    return this.ignoreList.includes(playerName);
+    return this.ignoreList.includes(normalizeName(playerName));
   }
 
   filterNaughtyWords(message: string): string {
