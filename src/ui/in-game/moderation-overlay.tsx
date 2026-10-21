@@ -52,15 +52,15 @@ export function ModerationOverlay() {
   if (warning) {
     const t = locale.moderation;
     return (
-      <div
-        class='absolute inset-0 flex items-center justify-center bg-black/60 p-4'
+      <dialog
+        class='modal'
+        open
+        role='alertdialog'
+        aria-labelledby='warning-title'
         style={{ zIndex: MODERATION_Z }}
       >
         <div
           class={`modal-box max-w-md border-2 border-error ${UI_MODAL_BG} ${UI_BLUR}`}
-          role='alertdialog'
-          aria-modal='true'
-          aria-labelledby='warning-title'
         >
           <h3 id='warning-title' class='font-bold text-error text-lg'>
             {t.warningTitle}
@@ -84,7 +84,7 @@ export function ModerationOverlay() {
             </Button>
           </div>
         </div>
-      </div>
+      </dialog>
     );
   }
 
@@ -107,16 +107,13 @@ export function ModerationOverlay() {
       : '';
 
   return (
-    <div
-      class='absolute inset-0 flex items-center justify-center bg-black/40 p-4'
+    <dialog
+      class='modal'
+      open
+      aria-labelledby='report-title'
       style={{ zIndex: MODERATION_Z }}
     >
-      <div
-        class={`modal-box max-w-md ${UI_MODAL_BG} ${UI_BLUR}`}
-        role='dialog'
-        aria-modal='true'
-        aria-labelledby='report-title'
-      >
+      <div class={`modal-box max-w-md ${UI_MODAL_BG} ${UI_BLUR}`}>
         <h3 id='report-title' class='font-bold text-lg'>
           {formatLocaleString(t.reportTitle, { name: report.name })}
         </h3>
@@ -193,6 +190,6 @@ export function ModerationOverlay() {
           </form>
         )}
       </div>
-    </div>
+    </dialog>
   );
 }
