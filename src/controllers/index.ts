@@ -34,6 +34,13 @@ export { KeyboardController } from './keyboard-controller';
 export { LockerController } from './locker-controller';
 export { MapController } from './map-controller';
 export { MarriageController } from './marriage-controller';
+export {
+  FAMILY_MODERATION,
+  ModerationController,
+  REPORT_CATEGORIES,
+  REPORT_MAX_LENGTH,
+  REPORT_MIN_LENGTH,
+} from './moderation-controller';
 export { MouseController } from './mouse-controller';
 export { MovementController } from './movement-controller';
 export { NpcController } from './npc-controller';

@@ -26,6 +26,7 @@ import { registerLockerHandlers } from './locker';
 import { registerLoginHandlers } from './login';
 import { registerMarriageHandlers } from './marriage';
 import { registerMessageHandlers } from './message';
+import { registerModerationHandlers } from './moderation';
 import { registerMusicHandlers } from './music';
 import { registerNpcHandlers } from './npc';
 import { registerPaperdollHandlers } from './paperdoll';
@@ -48,6 +49,7 @@ import { registerWelcomeHandlers } from './welcome';
 
 export function registerAllHandlers(client: Client): void {
   registerAlduinHandlers(client);
+  registerModerationHandlers(client);
   registerInitHandlers(client);
   registerConnectionHandlers(client);
   registerLoginHandlers(client);

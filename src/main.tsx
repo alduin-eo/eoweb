@@ -11,6 +11,7 @@ import {
 import './css/style.css';
 import { render } from 'preact';
 import { Client } from '@/client';
+import { getCharacterRectangle } from '@/collision';
 import { applyUiScale } from '@/ui/in-game';
 import { Ui } from './ui';
 
@@ -19,6 +20,14 @@ applyUiScale();
 // ── Client & Mobile ──────────────────────────────────────────────────────
 
 const client = new Client();
+// Test builds only (VITE_DEPLOY_ENV=test): hook for the automated browser checks of the TEST site.
+// Removed from production bundles at build time.
+if (import.meta.env.VITE_DEPLOY_ENV === 'test') {
+  (window as unknown as Record<string, unknown>).__alduinTest = {
+    client,
+    getCharacterRectangle,
+  };
+}
 
 // Unlock audio after the first user gesture (browser autoplay policy).
 // One-time handler on click/keydown/touchstart.

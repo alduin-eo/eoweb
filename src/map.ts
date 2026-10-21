@@ -42,13 +42,14 @@ import {
   PLAYER_MENU_HEIGHT,
   PLAYER_MENU_ITEM_HEIGHT,
   PLAYER_MENU_OFFSET_Y,
+  PLAYER_MENU_REPORT_HEIGHT,
   PLAYER_MENU_WIDTH,
   TILE_HEIGHT,
   TILE_WIDTH,
   WALK_HEIGHT_FACTOR,
   WALK_WIDTH_FACTOR,
 } from '@/consts';
-import { GameState } from '@/game-state';
+import { GameState, PlayerMenuItem } from '@/game-state';
 import { GfxType } from '@/gfx';
 import type { ChatBubble, Emote, HealthBar } from '@/render';
 import {
@@ -2301,7 +2302,33 @@ export class MapRenderer {
     }
 
     const hovered = this.client.mouseController.getHoveredPlayerMenuItem();
-    if (hovered !== undefined) {
+
+    // Alduin: "Report" row under the classic 8-item menu bitmap
+    {
+      const x = rect.position.x + rect.width + 10;
+      const y = rect.position.y + PLAYER_MENU_HEIGHT;
+      const row = this.ensureUiGraphics(
+        'ui:player-menu:report',
+        'ui:player-menu-report',
+      );
+      row
+        .roundRect(x, y, PLAYER_MENU_WIDTH, PLAYER_MENU_REPORT_HEIGHT - 2, 3)
+        .fill({
+          color: hovered === PlayerMenuItem.Report ? 0x7a1f1f : 0x2b1a12,
+          alpha: 0.92,
+        })
+        .stroke({ width: 1, color: 0xc8a165 });
+      this.addAtlasTextSprites(
+        'ui:player-menu:report-text',
+        this.client.locale.moderation.reportPlayer,
+        { x: x + PLAYER_MENU_WIDTH / 2, y: y + 2 },
+        hovered === PlayerMenuItem.Report ? '#ffffff' : '#f3d9a4',
+        true,
+        false,
+      );
+    }
+
+    if (hovered !== undefined && hovered !== PlayerMenuItem.Report) {
       const hoverTexture = this.client.atlas.getFrameTexture({
         atlasIndex: frame.atlasIndex,
         x: frame.x + PLAYER_MENU_WIDTH,

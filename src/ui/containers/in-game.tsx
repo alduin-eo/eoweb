@@ -33,6 +33,7 @@ import {
   LawDialog,
   LockerDialog,
   MobileNav,
+  ModerationOverlay,
   NavSidebar,
   PacketLogDialog,
   PartyPanel,
@@ -331,6 +332,7 @@ function InGameContent() {
       </div>
       <TouchJoystick />
       <TouchActionButtons />
+      <ModerationOverlay />
 
       {open.length > 0 && (
         <DialogArena
