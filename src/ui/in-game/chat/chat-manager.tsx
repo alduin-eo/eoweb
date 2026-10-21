@@ -222,9 +222,10 @@ export function ChatManagerProvider({
     const currentDialog = dialogRef.current;
     let newPmTabId: string | null = null;
 
-    // PM channel → auto-create a dedicated tab in chat. Only a whisper this
-    // player sent switches to it; an incoming whisper must not take over the
-    // input, or the next line typed for Local would be whispered to the sender.
+    // PM channel → auto-create a dedicated tab in chat, without switching to
+    // it: the active tab decides where the next typed line goes, so taking it
+    // over would whisper the player's next Local line to that person. Opening
+    // a conversation is explicit (openWhisper); whispers show in the preview.
     if (isPMChannel(channel)) {
       const alreadyTracked = currentDialog.tabs.some((t) =>
         t.channels.includes(channel),
@@ -243,16 +244,12 @@ export function ChatManagerProvider({
         dialogRef.current = {
           ...currentDialog,
           tabs: [...currentDialog.tabs, newTab],
-          activeTabId: outgoing ? newTabId : currentDialog.activeTabId,
+          activeTabId: currentDialog.activeTabId,
         };
         setDialog((prev) =>
           prev.tabs.some((t) => t.id === newTabId)
             ? prev
-            : {
-                ...prev,
-                tabs: [...prev.tabs, newTab],
-                activeTabId: outgoing ? newTabId : prev.activeTabId,
-              },
+            : { ...prev, tabs: [...prev.tabs, newTab] },
         );
       }
     }

@@ -343,27 +343,35 @@ export function ChatDialog({ position }: ChatDialogProps) {
   const activeTabId = dialog?.activeTabId ?? '';
   const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
 
-  const tabMessages = activeTab
-    ? activeTab.channels
-        .flatMap((ch) => messages.get(ch) ?? [])
-        .sort((a, b) => a.timestampUtc - b.timestampUtc)
-    : [];
-
-  if (!dialog || !activeTab) return null;
-
-  // Unfocused: chromeless preview. Whispers always show here, even when
-  // their PM tab is not the active one.
-  if (!focused) {
-    const previewMessages = [
-      ...tabMessages,
-      ...[...messages.entries()]
+  // Whispers live in their own PM tabs (opened in the background), and are
+  // also shown in the General tab and the unfocused preview so none are missed.
+  const otherWhispers = activeTab
+    ? [...messages.entries()]
         .filter(
           ([ch]) =>
             isPMChannel(ch as ChatChannel) &&
             !activeTab.channels.includes(ch as ChatChannel),
         )
-        .flatMap(([, list]) => list),
-    ].sort((a, b) => a.timestampUtc - b.timestampUtc);
+        .flatMap(([, list]) => list)
+    : [];
+
+  const tabMessages = activeTab
+    ? [
+        ...activeTab.channels.flatMap((ch) => messages.get(ch) ?? []),
+        ...(activeTab.id === 'general' ? otherWhispers : []),
+      ].sort((a, b) => a.timestampUtc - b.timestampUtc)
+    : [];
+
+  if (!dialog || !activeTab) return null;
+
+  // Unfocused: chromeless preview
+  if (!focused) {
+    const previewMessages =
+      activeTab.id === 'general'
+        ? tabMessages
+        : [...tabMessages, ...otherWhispers].sort(
+            (a, b) => a.timestampUtc - b.timestampUtc,
+          );
     return (
       <ChatPreview
         messages={previewMessages}
