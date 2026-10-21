@@ -49,6 +49,8 @@ export const PLAYER_MENU_WIDTH = 96;
 export const PLAYER_MENU_HEIGHT = 137;
 export const PLAYER_MENU_ITEM_HEIGHT = 15;
 export const PLAYER_MENU_OFFSET_Y = 10;
+/** Alduin "Report" row drawn under the player menu bitmap */
+export const PLAYER_MENU_REPORT_HEIGHT = 18;
 
 export const NUMBER_OF_EFFECTS = 34;
 export const SPLOOSHIE_EFFECT_ID = 9;

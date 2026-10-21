@@ -60,6 +60,7 @@ import {
   LockerController,
   MapController,
   MarriageController,
+  ModerationController,
   MouseController,
   MovementController,
   NpcController,
@@ -182,6 +183,7 @@ export class Client {
   audioController: AudioController;
   authenticationController: AuthenticationController;
   alduinController: AlduinController;
+  moderationController: ModerationController;
   bankController: BankController;
   bardController: BardController;
   barberController: BarberController;
@@ -324,6 +326,7 @@ export class Client {
     setAudioController(this.audioController);
     this.authenticationController = new AuthenticationController(this);
     this.alduinController = new AlduinController(this);
+    this.moderationController = new ModerationController(this);
     this.bankController = new BankController(this);
     this.bardController = new BardController(this);
     this.barberController = new BarberController(this);

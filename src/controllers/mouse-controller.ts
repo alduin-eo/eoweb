@@ -11,8 +11,10 @@ import {
   getSignIntersecting,
 } from '@/collision';
 import {
+  PLAYER_MENU_HEIGHT,
   PLAYER_MENU_ITEM_HEIGHT,
   PLAYER_MENU_OFFSET_Y,
+  PLAYER_MENU_REPORT_HEIGHT,
   PLAYER_MENU_WIDTH,
 } from '@/consts';
 import { EOResourceID } from '@/edf';
@@ -236,6 +238,11 @@ export class MouseController {
             break;
           case PlayerMenuItem.Trade:
             this.client.tradeController.request(this.client.menuPlayerId);
+            break;
+          case PlayerMenuItem.Report:
+            this.client.moderationController.openReport(
+              this.client.menuPlayerId,
+            );
             break;
         }
         this.client.menuPlayerId = 0;
@@ -476,9 +483,18 @@ export class MouseController {
       return;
     }
 
-    const relativeY =
-      this.client.mousePosition.y - rect.position.y - PLAYER_MENU_OFFSET_Y;
+    const menuY = this.client.mousePosition.y - rect.position.y;
+    if (
+      menuY >= PLAYER_MENU_HEIGHT &&
+      menuY < PLAYER_MENU_HEIGHT + PLAYER_MENU_REPORT_HEIGHT
+    ) {
+      return PlayerMenuItem.Report;
+    }
+
+    const relativeY = menuY - PLAYER_MENU_OFFSET_Y;
     const itemIndex = Math.floor(relativeY / PLAYER_MENU_ITEM_HEIGHT);
-    return itemIndex in PlayerMenuItem ? itemIndex : undefined;
+    return itemIndex in PlayerMenuItem && itemIndex !== PlayerMenuItem.Report
+      ? itemIndex
+      : undefined;
   }
 }

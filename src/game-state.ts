@@ -25,6 +25,8 @@ export enum PlayerMenuItem {
   Whisper = 5,
   Friend = 6,
   Ignore = 7,
+  /** Alduin: drawn as an extra row under the classic menu bitmap */
+  Report = 8,
 }
 
 export enum TradeState {
