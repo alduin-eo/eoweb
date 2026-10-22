@@ -407,6 +407,16 @@ export function SocialDialog() {
     ...client.socialController.ignoreList,
   ]);
 
+  // Keep the lists current when they change elsewhere (e.g. the right-click player menu)
+  useEffect(() => {
+    const refresh = () => {
+      setFriendList([...client.socialController.friendList]);
+      setIgnoreList([...client.socialController.ignoreList]);
+    };
+    client.socialController.subscribeLists(refresh);
+    return () => client.socialController.unsubscribeLists(refresh);
+  }, [client]);
+
   const [activeTab, setActiveTab] = useState<SocialTabId>('online');
 
   useEffect(() => {

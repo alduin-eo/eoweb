@@ -19,6 +19,7 @@ import {
 } from '@/consts';
 import { EOResourceID } from '@/edf';
 import { GameState, PlayerMenuItem } from '@/game-state';
+import { formatLocaleString } from '@/locale';
 import { CursorClickAnimation } from '@/render';
 import { SfxId } from '@/sfx';
 import { capitalize } from '@/utils';
@@ -222,11 +223,48 @@ export class MouseController {
             this.client.socialController.requestBook(this.client.menuPlayerId);
             break;
           case PlayerMenuItem.Whisper: {
+            // same as Social › Whisper: open the private conversation
             const character = this.client.getCharacterById(
               this.client.menuPlayerId,
             );
             if (character) {
-              this.client.chatController.notifySetChat(`!${character.name} `);
+              this.client.chatController.requestWhisper(character.name);
+            }
+            break;
+          }
+          case PlayerMenuItem.Friend: {
+            const character = this.client.getCharacterById(
+              this.client.menuPlayerId,
+            );
+            if (character) {
+              const t = this.client.locale.social;
+              const already = this.client.socialController.isFriend(
+                character.name,
+              );
+              this.client.socialController.addFriend(character.name);
+              this.client.toastController.show(
+                formatLocaleString(already ? t.alreadyFriend : t.friendAdded, {
+                  name: capitalize(character.name),
+                }),
+              );
+            }
+            break;
+          }
+          case PlayerMenuItem.Ignore: {
+            const character = this.client.getCharacterById(
+              this.client.menuPlayerId,
+            );
+            if (character) {
+              const t = this.client.locale.social;
+              const already = this.client.socialController.isIgnored(
+                character.name,
+              );
+              this.client.socialController.addIgnore(character.name);
+              this.client.toastController.show(
+                formatLocaleString(already ? t.alreadyIgnored : t.nowIgnored, {
+                  name: capitalize(character.name),
+                }),
+              );
             }
             break;
           }

@@ -39,6 +39,7 @@ export class ChatController {
   private chatSubscribers: ChatSubscriber[] = [];
   private serverChatSubscribers: ServerChatSubscriber[] = [];
   private setChatSubscribers: ((text: string) => void)[] = [];
+  private whisperSubscribers: ((name: string) => void)[] = [];
 
   constructor(client: Client) {
     this.client = client;
@@ -80,6 +81,19 @@ export class ChatController {
 
   notifySetChat(text: string): void {
     for (const cb of this.setChatSubscribers) cb(text);
+  }
+
+  /** Open (or focus) the private conversation with a player, like Social › Whisper. */
+  subscribeWhisper(cb: (name: string) => void): void {
+    this.whisperSubscribers.push(cb);
+  }
+
+  unsubscribeWhisper(cb: (name: string) => void): void {
+    this.whisperSubscribers = this.whisperSubscribers.filter((s) => s !== cb);
+  }
+
+  requestWhisper(name: string): void {
+    for (const cb of this.whisperSubscribers) cb(name);
   }
 
   chat(message: string): void {

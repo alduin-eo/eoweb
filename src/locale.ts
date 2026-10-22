@@ -439,6 +439,10 @@ export const locales = {
       friends: 'Friends ({count})',
       guild: 'Guild ({count})',
       ignored: 'Ignored ({count})',
+      friendAdded: '{name} was added to your friends.',
+      alreadyFriend: '{name} is already your friend.',
+      nowIgnored: 'You are now ignoring {name}.',
+      alreadyIgnored: 'You are already ignoring {name}.',
     },
     jukebox: {
       noSongs: 'No songs available',
@@ -1109,6 +1113,10 @@ export const locales = {
       friends: 'Vrienden ({count})',
       guild: 'Gilde ({count})',
       ignored: 'Geblokkeerd ({count})',
+      friendAdded: '{name} is toegevoegd aan je vrienden.',
+      alreadyFriend: '{name} is al je vriend.',
+      nowIgnored: 'Je negeert {name} nu.',
+      alreadyIgnored: 'Je negeert {name} al.',
     },
     jukebox: {
       noSongs: 'Geen nummers beschikbaar',
@@ -1781,6 +1789,10 @@ export const locales = {
       friends: 'Vänner ({count})',
       guild: 'Gille ({count})',
       ignored: 'Blockerade ({count})',
+      friendAdded: '{name} har lagts till bland dina vänner.',
+      alreadyFriend: '{name} är redan din vän.',
+      nowIgnored: 'Du ignorerar nu {name}.',
+      alreadyIgnored: 'Du ignorerar redan {name}.',
     },
     jukebox: {
       noSongs: 'Inga låtar tillgängliga',
@@ -2452,6 +2464,10 @@ export const locales = {
       friends: 'Amigos ({count})',
       guild: 'Guilda ({count})',
       ignored: 'Bloqueados ({count})',
+      friendAdded: '{name} foi adicionado aos seus amigos.',
+      alreadyFriend: '{name} já é seu amigo.',
+      nowIgnored: 'Agora você está ignorando {name}.',
+      alreadyIgnored: 'Você já está ignorando {name}.',
     },
     jukebox: {
       noSongs: 'Nenhuma música disponível',
