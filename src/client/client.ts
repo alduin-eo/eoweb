@@ -35,6 +35,7 @@ import { clearRectangles } from '@/collision';
 import { getDefaultConfig, loadConfig } from '@/config';
 import { HALF_TILE_HEIGHT, INITIAL_IDLE_TICKS, MAX_CHALLENGE } from '@/consts';
 import {
+  AdminCpController,
   AlduinController,
   AlertController,
   AnimationController,
@@ -184,6 +185,7 @@ export class Client {
   authenticationController: AuthenticationController;
   alduinController: AlduinController;
   moderationController: ModerationController;
+  adminCpController: AdminCpController;
   bankController: BankController;
   bardController: BardController;
   barberController: BarberController;
@@ -327,6 +329,7 @@ export class Client {
     this.authenticationController = new AuthenticationController(this);
     this.alduinController = new AlduinController(this);
     this.moderationController = new ModerationController(this);
+    this.adminCpController = new AdminCpController(this);
     this.bankController = new BankController(this);
     this.bardController = new BardController(this);
     this.barberController = new BarberController(this);
@@ -768,6 +771,7 @@ export class Client {
   }
 
   private handleConnectionClose() {
+    this.adminCpController.reset();
     if (this.playerTriggeredDisconnect) {
       this.playerTriggeredDisconnect = false;
       return;
@@ -840,6 +844,7 @@ export class Client {
   }
 
   disconnect() {
+    this.adminCpController.reset();
     this.playerTriggeredDisconnect = true;
     this.reconnecting = false;
     if (this.reconnectTimer) {
