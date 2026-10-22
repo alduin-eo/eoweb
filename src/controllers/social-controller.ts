@@ -151,6 +151,21 @@ export class SocialController {
     }
   }
 
+  private listSubscribers: (() => void)[] = [];
+
+  /** Friend/ignore list changed (from the Social dialog or the right-click player menu). */
+  subscribeLists(cb: () => void): void {
+    this.listSubscribers.push(cb);
+  }
+
+  unsubscribeLists(cb: () => void): void {
+    this.listSubscribers = this.listSubscribers.filter((s) => s !== cb);
+  }
+
+  private notifyLists(): void {
+    for (const cb of this.listSubscribers) cb();
+  }
+
   addFriend(playerName: string): void {
     const name = normalizeName(playerName);
     if (!name || this.friendList.includes(name)) {
@@ -159,12 +174,14 @@ export class SocialController {
 
     this.friendList.push(name);
     saveNameList(FRIENDS_KEY, this.friendList);
+    this.notifyLists();
   }
 
   removeFriend(playerName: string): void {
     const name = normalizeName(playerName);
     this.friendList = this.friendList.filter((n) => n !== name);
     saveNameList(FRIENDS_KEY, this.friendList);
+    this.notifyLists();
   }
 
   addIgnore(playerName: string): void {
@@ -175,12 +192,14 @@ export class SocialController {
 
     this.ignoreList.push(name);
     saveNameList(IGNORE_KEY, this.ignoreList);
+    this.notifyLists();
   }
 
   removeIgnore(playerName: string): void {
     const name = normalizeName(playerName);
     this.ignoreList = this.ignoreList.filter((n) => n !== name);
     saveNameList(IGNORE_KEY, this.ignoreList);
+    this.notifyLists();
   }
 
   isFriend(playerName: string): boolean {

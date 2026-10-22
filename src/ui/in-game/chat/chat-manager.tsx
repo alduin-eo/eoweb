@@ -407,6 +407,12 @@ export function ChatManagerProvider({
     setOpenChatSignal((n) => n + 1);
   }, []);
 
+  // Whisper requests from outside the chat UI (e.g. the right-click player menu)
+  useEffect(() => {
+    client.chatController.subscribeWhisper(openWhisper);
+    return () => client.chatController.unsubscribeWhisper(openWhisper);
+  }, [client, openWhisper]);
+
   return (
     <ChatManagerContext.Provider
       value={{
