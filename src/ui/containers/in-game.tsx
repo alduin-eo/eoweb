@@ -11,6 +11,7 @@ import {
 import { useClient } from '@/ui/context';
 import type { DialogId } from '@/ui/in-game';
 import {
+  AdminCpDialog,
   AlduinDialog,
   BankDialog,
   BarberDialog,
@@ -57,6 +58,7 @@ import {
 } from '@/ui/in-game';
 
 const ALL_DIALOG_IDS: DialogId[] = [
+  'adminCp',
   'alduin',
   'bank',
   'bard',
@@ -85,6 +87,8 @@ const ALL_DIALOG_IDS: DialogId[] = [
 
 function DialogById({ id }: { id: DialogId }) {
   switch (id) {
+    case 'adminCp':
+      return <AdminCpDialog />;
     case 'alduin':
       return <AlduinDialog />;
     case 'bank':
@@ -173,6 +177,12 @@ function InGameContent() {
     client.jukeboxController.subscribeRequestSucceeded(
       onJukeboxRequestSucceeded,
     );
+
+    // $admincp: the server confirmed this character may use the panel
+    const handleAdminCpOpened = () => {
+      openDialog('adminCp');
+    };
+    client.adminCpController.subscribeOpened(handleAdminCpOpened);
 
     const handleChestOpened = () => {
       openDialog('chest');
@@ -280,6 +290,7 @@ function InGameContent() {
       client.jukeboxController.unsubscribeRequestSucceeded(
         onJukeboxRequestSucceeded,
       );
+      client.adminCpController.unsubscribeOpened(handleAdminCpOpened);
       client.chestController.unsubscribeOpened(handleChestOpened);
       client.lockerController.unsubscribeOpened(handleLockerOpened);
       client.bankController.unsubscribeOpened(handleBankOpened);

@@ -1,3 +1,8 @@
+export {
+  AdminCpController,
+  type AdminCpSession,
+  FAMILY_ADMIN_CP,
+} from './admin-cp-controller';
 export { AlduinController } from './alduin-controller';
 export { AlertController } from './alert-controller';
 export { AnimationController } from './animation-controller';

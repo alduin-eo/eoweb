@@ -216,10 +216,11 @@ export class GfxLoader {
     const imageData = new ImageData(pixels, result.width, result.height);
     const bm = await createImageBitmap(imageData);
 
-    // LRU eviction — evict from both caches together
+    // LRU eviction — evict from both caches together. The evicted bitmap is not closed: callers
+    // may still hold it (e.g. the atlas or an item icon about to draw it, which then failed with
+    // "image source is detached"); it is freed once nothing references it.
     if (this.bitmapCache.size >= LRU_MAX_SIZE) {
       const firstKey = this.bitmapCache.keys().next().value as string;
-      this.bitmapCache.get(firstKey)?.close();
       this.bitmapCache.delete(firstKey);
       this.pixelCache.delete(firstKey);
     }
